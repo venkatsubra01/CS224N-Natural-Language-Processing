@@ -271,6 +271,7 @@ class NMT(nn.Module):
         # Initialize previous combined output vector o_{t-1} as zero
         batch_size = enc_hiddens.size(0)
         o_prev = torch.zeros(batch_size, self.hidden_size, device=self.device)
+        print(f"o_prev: {o_prev}")
 
         # Initialize a list we will use to collect the combined output o_t on each step
         combined_outputs = []
@@ -311,6 +312,43 @@ class NMT(nn.Module):
         ###     Tensor Stacking:
         ###         https://pytorch.org/docs/stable/torch.html#torch.stack
 
+        # (b, src_len, h)
+        enc_hiddens_proj = self.att_projection(enc_hiddens)
+
+        # Should be (tgt_len, b, e), where b = 5 and e = 3 in sanity_check.py
+        Y = self.model_embeddings.target(target_padded)
+
+        # Used to keep track of Ybar_t
+        Ybar = []
+
+        # "Use the torch.split function to iterate over the time dimension of Y."
+        # "Squeeze Y_t into a tensor of dimension (b, e)."
+        Y_splitted = [torch.squeeze(y_t, 0) for y_t in torch.split(Y, 1)]
+        for i in range(len(Y_splitted)):
+
+            # "Construct Ybar_t by concatenating Y_t with o_prev on their last dimension"
+            Ybar.append(torch.cat((Y_splitted[i], o_prev), -1))
+
+            # "Use the step function to compute the the Decoder's next (cell, state) values
+            ###   as well as the new combined output o_t."
+
+            # " e_t (Tensor): Tensor of shape (b, src_len). It is attention scores distribution.
+                                #Note: You will not use this outside of this function.
+                                      #We are simply returning this value so that we can sanity check
+                                      #your implementation."
+            dec_state, combined_output, e_t = self.step(Ybar_t=Ybar[-1],dec_state=dec_state, 
+                                    enc_hiddens=enc_hiddens, enc_hiddens_proj=enc_hiddens_proj, enc_masks=enc_masks)
+            
+            # "Append o_t to combined_outputs"
+            combined_outputs.append(combined_output)
+
+            # "Update o_prev to the new o_t."
+            o_prev = combined_output
+        
+        # "Use torch.stack to convert combined_outputs from a list length tgt_len of
+        ###         tensors shape (b, h), to a single tensor shape (tgt_len, b, h)"
+        combined_outputs = torch.stack(combined_outputs)
+        # combined_outputs just conta
 
 
         ### END YOUR CODE
