@@ -84,7 +84,8 @@ class NMT(nn.Module):
         ###         https://pytorch.org/docs/stable/generated/torch.nn.Conv1d.html
         self.post_embed_cnn = nn.Conv1d(in_channels=embed_size, out_channels=embed_size, kernel_size=2, padding='same')
         self.encoder = nn.LSTM(input_size=embed_size, hidden_size=hidden_size, bias=True, bidirectional=True)
-        self.decoder = nn.LSTMCell(input_size=embed_size, hidden_size=hidden_size, bias=True)
+        # Ybar_t (which is the input into the decoder besides the decoder hidden/cell state at time t) is the previous output vector (hx1) and the new embedded source word (ex1) so input is h+e
+        self.decoder = nn.LSTMCell(input_size=embed_size+hidden_size, hidden_size=hidden_size, bias=True)
         # W_h and W_c \in R^{hx2h} --> projection from the 2h concatenated vector of the final hidden states/cell states for both directions of encoder
         # to the h-length vector that is the first hidden/cell state for the decoder
         self.h_projection = nn.Linear(in_features=hidden_size*2, out_features=hidden_size,bias=False)
@@ -271,7 +272,6 @@ class NMT(nn.Module):
         # Initialize previous combined output vector o_{t-1} as zero
         batch_size = enc_hiddens.size(0)
         o_prev = torch.zeros(batch_size, self.hidden_size, device=self.device)
-        print(f"o_prev: {o_prev}")
 
         # Initialize a list we will use to collect the combined output o_t on each step
         combined_outputs = []
@@ -406,7 +406,15 @@ class NMT(nn.Module):
         ###         https://pytorch.org/docs/stable/torch.html#torch.unsqueeze
         ###     Tensor Squeeze:
         ###         https://pytorch.org/docs/stable/torch.html#torch.squeeze
+        # Ybar_t is the input into the decoder (includes previous time step's output vector and next embedded source word)
+        dec_state = self.decoder(Ybar_t, (dec_state))
 
+        # torch.bmm requires multiplying the first (b x n x m) tensor by a (b x m x p) tensor to make a (b x n x p) tensor
+        # So dec_hidden (second term of torch.bmm) needs to have a dimension 1 at the end
+        dec_hidden = torch.unsqueeze(dec_state[0], -1)
+        e_t = torch.squeeze(torch.bmm(enc_hiddens_proj, dec_hidden), dim=-1)
+        dec_hidden = torch.squeeze(dec_hidden, -1)
+        #e_t = torch.bmm()
 
         ### END YOUR CODE
 
@@ -442,7 +450,22 @@ class NMT(nn.Module):
         ###     Tanh:
         ###         https://pytorch.org/docs/stable/torch.html#torch.tanh
 
+        # To weight the attention scores to make the attention output, take the softmax
+        alpha_t = F.softmax(e_t)
 
+        # We want to multiply alpha_t (b x src_len) by enc_hiddens (b x src_len x 2*h) to get attention output a_t (b x 2*h)
+        # To use torch.bmm, we have to make alpha_t b x 1 x src_len, then, the result of torch.bmm will be b x 1 x 2*h, then squeeze
+        # to get b x 2*h
+        alpha_t = torch.unsqueeze(alpha_t, dim=1)
+        a_t = torch.squeeze(torch.bmm(alpha_t, enc_hiddens), dim=1)
+
+        # U_t = [dec_hidden | a_t] --> (b x 3h)
+        U_t = torch.cat((dec_hidden, a_t), dim=1)
+
+        # V_t = W_u x u_t --> V_t = (b x h)
+        V_t = self.combined_output_projection(U_t)
+
+        O_t = self.dropout(torch.tanh(V_t))
         ### END YOUR CODE
 
         combined_output = O_t
