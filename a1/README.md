@@ -1,6 +1,6 @@
-# CS224N Assignment 1: Exploring Word Vectors
+# CS224N Assignment 1: Exploring Word Vectors Assignment from Winter 2021 by Venkat Subramanian
 
-This assignment explores the foundations of word embeddings in Natural Language Processing (NLP), focusing on both count-based and prediction-based word vector models. You will implement, analyze, and visualize word vectors, and reflect on their properties and biases.
+This assignment explores the foundations of word embeddings in Natural Language Processing (NLP), focusing on both count-based and prediction-based word vector models. Here, I implemented and analyzed word vectors and reflected on their properties and biases.
 
 ## Project Structure
 - The "student" folder contains all the solutions I wrote for the coding portion of the assignment
