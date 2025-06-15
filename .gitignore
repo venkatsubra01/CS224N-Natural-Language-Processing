@@ -1,0 +1,10 @@
+a4/student/BLEU17model_params.bin
+a4/student/runs/*
+a5/a5_WIP.zip
+a5/student_2023/expt/*
+a5/student_2023/src/__pycache__/*
+a4/student/model/data/*
+a4/student/model/*
+a4/student/model/
+*.pyc
+
