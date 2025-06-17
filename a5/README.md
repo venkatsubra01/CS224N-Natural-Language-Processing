@@ -1,6 +1,6 @@
 # CS224N Assignment 5: Self-Attention, Transformers and Pretraining
 
-This repository contains code to generate (corrupted span) training data, pretrain, and finetune a GPT-2 like transformer model to predict birthplaces of famous people. The code also includes a simple implementation of PerceiverAR from [Hawthorne et al](https://arxiv.org/abs/2202.07765). This is the last assignment for Stanford's CS224N course, Homework 5 from Winter 2023, and was completed by Venkat Subramanian.
+This repository contains code to generate (corrupted span) training data, pretrain, and finetune a GPT-1-like transformer model to predict birthplaces of famous people. The code also includes a simple implementation of PerceiverAR from [Hawthorne et al](https://arxiv.org/abs/2202.07765). This is the last assignment for Stanford's CS224N course, Homework 5 from Winter 2023, and was completed by Venkat Subramanian.
 
 ## Project Structure
 - All coding solutions that I wrote are in the "student_2023" folder
