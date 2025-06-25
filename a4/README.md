@@ -41,7 +41,7 @@ The project implements a sequence-to-sequence NMT model with the following featu
    I used Google Colab to train this model using free T4 GPUs. train_nmt.ipynb contains the training procedure when in Google Colab. All that is needed to do is upload the zipped project folder as "a4.zip" and run "train_nmt.ipynb" cell by cell.
    
 4. **Changes to Make in Colab**
-   Change the instances of "/opt/anaconda3/envs/local_nmt/bin/python" to "python3" in run.sh. In nmt_model.py, change "params = torch.load(model_path, map_location=lambda storage, loc: storage)" to "params = torch.load(model_path, weights_only=False, map_location=lambda storage, loc: storage)"
+   Change the instances of "/opt/anaconda3/envs/local_nmt/bin/python" to "python3" in run.sh.
 
 ## Results
 1. Even though training ended after 12,400 iterations (instead of around 18,000) due to the above torch.load deprecation error, we still hit a BLEU score of 17.2, which is comparable to the expected results of ~20.
