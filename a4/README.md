@@ -21,6 +21,7 @@ The project implements a sequence-to-sequence NMT model with the following featu
 - `nmt_model.py`: Implements the NMT model, including encoder, decoder, attention, and beam search.
 - `run.py`: Script to train and evaluate the model.
 - `vocab.py`, `utils.py`: Utilities for vocabulary management and data processing.
+- `client` and `server`: Contains the frontend and backend for a visualization of the translation in action
 
 ## My Implementation/Code Written
 
