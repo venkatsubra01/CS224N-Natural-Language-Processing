@@ -293,6 +293,7 @@ def decode(args: Dict[str, str]):
 
     print("load test source sentences from [{}]".format(args['TEST_SOURCE_FILE']), file=sys.stderr)
     test_data_src = read_corpus(args['TEST_SOURCE_FILE'], source='src', vocab_size=3000)
+    print(f"test_data_src: {test_data_src}")
     if args['TEST_TARGET_FILE']:
         print("load test target sentences from [{}]".format(args['TEST_TARGET_FILE']), file=sys.stderr)
         test_data_tgt = read_corpus(args['TEST_TARGET_FILE'], source='tgt', vocab_size=2000)
@@ -313,12 +314,29 @@ def decode(args: Dict[str, str]):
         bleu_score = compute_corpus_level_bleu_score(test_data_tgt, top_hypotheses)
         print('Corpus BLEU: {}'.format(bleu_score), file=sys.stderr)
 
+    print(f"hypotheses: {hypotheses}")
     with open(args['OUTPUT_FILE'], 'w') as f:
         for src_sent, hyps in zip(test_data_src, hypotheses):
             top_hyp = hyps[0]
             hyp_sent = ''.join(top_hyp.value).replace('▁', ' ')
             f.write(hyp_sent + '\n')
 
+# Made by VS
+def decode_single_query(query: str):
+    model = NMT.load("BLEU20model_params.bin")
+    
+    file_path = "query.txt"
+    with open(file_path, "w") as f:
+        f.write(query)
+    
+    test_data_src = read_corpus("query.txt", source='src', vocab_size=3000)
+    hypotheses = beam_search(model, test_data_src,
+                             beam_size=10,
+                             max_decoding_time_step=100)[0] # Get the first (and only) sentence's hypotheses
+    top_hyp = hypotheses[0]
+    print(f"top_hyp: {top_hyp}")
+    hyp_sent = ''.join(top_hyp.value).replace('▁', ' ')
+    return hyp_sent
 
 def beam_search(model: NMT, test_data_src: List[List[str]], beam_size: int, max_decoding_time_step: int) -> List[List[Hypothesis]]:
     """ Run beam search to construct hypotheses for a list of src-language sentences.
