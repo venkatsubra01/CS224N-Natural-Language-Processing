@@ -2,6 +2,8 @@
 
 This repository contains an implementation of a Neural Machine Translation (NMT) model for Stanford's CS224N course, Homework 4 from Winter 2023 by Venkat Subramanian. I also developed a frontend application to allow users to query the model and retrieve English translations from Mandarin sentences.
 
+![Application GIF](https://github.com/venkatsubra01/CS224N-Natural-Language-Processing/blob/main/a4/student/client/gifs/Translation_gif.gif)
+
 ## Project Structure
 - All coding solutions that I wrote are in the "student" folder
 - "a4_handout.pdf" is the original assignment questions with coding and written questions
@@ -52,4 +54,3 @@ The project implements a sequence-to-sequence NMT model with the following featu
 ## Results
 1. I hit a BLEU score of 20.3, which is comparable to the expected results of ~20. We will use these model params to make the Mandarin to English translator.
 2. Seq2Seq translators do significantly better when there is more context in the sentences.
-3. ![Application GIF](https://github.com/venkatsubra01/CS224N-Natural-Language-Processing/blob/main/a4/student/client/gifs/Translation_gif.gif)
