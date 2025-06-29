@@ -3,7 +3,7 @@ import React from 'react'
 export default function Examples() {
     return (
         <div className="text-center space-y-4 mx-40">
-            <h3 className="text-4xl">Try yourself:</h3>
+            <h3 className="text-4xl">Try yourself (Google Translate expected result on the right):</h3>
             <div className="flex space-x-4 text-xl">
                 <div className="w-1/2">由于天气突然变化，我们决定取消计划中的户外活动，改在室内举行会议.</div>
                 <div className="w-1/2">Due to the sudden change in weather, we decided to cancel the planned outdoor activities and hold the meeting indoors instead.</div>
