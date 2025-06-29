@@ -46,6 +46,9 @@ The project implements a sequence-to-sequence NMT model with the following featu
 4. **Changes to Make in Colab**
    Change the instances of "/opt/anaconda3/envs/local_nmt/bin/python" to "python3" in run.sh if you want to train (converting from my conda environment to the Colab environment)
 
+5. **Run the translator application**
+   In one terminal, execute `cd server` and `python server.py`. Then in another terminal, execute `cd client` and `npm run dev`. Then go to the port stated in the client terminal in your browser.
+
 ## Results
 1. I hit a BLEU score of 20.3, which is comparable to the expected results of ~20. We will use these model params to make the Mandarin to English translator.
 2. Seq2Seq translators do significantly better when there is more context in the sentences.
