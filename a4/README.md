@@ -52,4 +52,4 @@ The project implements a sequence-to-sequence NMT model with the following featu
 ## Results
 1. I hit a BLEU score of 20.3, which is comparable to the expected results of ~20. We will use these model params to make the Mandarin to English translator.
 2. Seq2Seq translators do significantly better when there is more context in the sentences.
-3. ![Application GIF](./student/a4/client/gifs/Translation_gif.gif)
+3. ![Application GIF](./a4/student/client/gifs/Translation_gif.gif)
